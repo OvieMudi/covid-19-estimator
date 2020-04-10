@@ -1,4 +1,4 @@
-
+/*
 const input = {
   region: {
     name: 'Africa',
@@ -11,7 +11,7 @@ const input = {
   reportedCases: 2747,
   population: 66622705,
   totalHospitalBeds: 1380614
-};
+}; */
 
 const normalizeTimeToElapse = (period, periodType) => {
   let normalizedTime = 1;
@@ -40,6 +40,8 @@ const estimateInfections = (reportedCases, periodType, timeToElapse) => (isSever
 const covid19ImpactEstimator = (data) => {
   const { reportedCases, periodType, timeToElapse } = data;
 
+  console.log('covid19ImpactEstimator -> data', data);
+
   const estimatedInfections = estimateInfections(reportedCases, periodType, timeToElapse);
 
   return {
@@ -54,8 +56,6 @@ const covid19ImpactEstimator = (data) => {
     }
   };
 };
-
-console.log('Going live in 5, 4, 3...', covid19ImpactEstimator(input));
 
 
 export default covid19ImpactEstimator;
