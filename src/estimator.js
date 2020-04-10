@@ -1,61 +1,77 @@
-/*
-const input = {
-  region: {
-    name: 'Africa',
-    avgAge: 19.7,
-    avgDailyIncomeInUSD: 5,
-    avgDailyIncomePopulation: 0.71
-  },
-  periodType: 'days',
-  timeToElapse: 38,
-  reportedCases: 2747,
-  population: 66622705,
-  totalHospitalBeds: 1380614
-}; */
+import estimateInfections from './estimateInfections';
 
-const normalizeTimeToElapse = (period, periodType) => {
-  let normalizedTime = 1;
-
-  if (['day', 'days'].includes(periodType)) {
-    normalizedTime = period;
-  } else if (['week', 'weeks'].includes(periodType)) {
-    normalizedTime = period * 7;
-  } else if (['month', 'months'].includes(periodType)) {
-    normalizedTime = period * 30;
-  }
-
-  return normalizedTime;
-};
-
-const estimateInfections = (reportedCases, periodType, timeToElapse) => (isSevereImpact) => {
-  const currentlyInfected = isSevereImpact ? reportedCases * 50 : reportedCases * 10;
-  return {
-    currentlyInfected,
-    infectionsByRequestedTime: currentlyInfected * (
-      2 ** Math.floor(normalizeTimeToElapse(timeToElapse, periodType) / 3))
-  };
-};
+// const input = {
+//   region: {
+//     name: 'Africa',
+//     avgAge: 19.7,
+//     avgDailyIncomeInUSD: 4,
+//     avgDailyIncomePopulation: 0.73
+//   },
+//   periodType: 'days',
+//   timeToElapse: 38,
+//   reportedCases: 2747,
+//   population: 92931687,
+//   totalHospitalBeds: 678874
+// };
 
 
 const covid19ImpactEstimator = (data) => {
-  const { reportedCases, periodType, timeToElapse } = data;
+  const {
+    reportedCases, periodType, timeToElapse, /* population, */ totalHospitalBeds
+  } = data;
 
   console.log('covid19ImpactEstimator -> data', data);
 
   const estimatedInfections = estimateInfections(reportedCases, periodType, timeToElapse);
 
+  const estimate = {
+    currentlyInfected: estimatedInfections(false).currentlyInfected,
+    infectionsByRequestedTime: estimatedInfections(false).infectionsByRequestedTime
+  };
+
+  const severeImpact = {
+    currentlyInfected: estimatedInfections(true).currentlyInfected,
+    infectionsByRequestedTime: estimatedInfections(true).infectionsByRequestedTime
+  };
+
+  estimate.severeCasesByRequestedTime = Math.trunc(
+    estimate.infectionsByRequestedTime * 0.15
+  );
+  severeImpact.severeCasesByRequestedTime = Math.trunc(
+    severeImpact.infectionsByRequestedTime * 0.15
+  );
+
+  estimate.hospitalBedsByRequestedTime = Math.trunc(
+    (totalHospitalBeds * 0.35) - estimate.severeCasesByRequestedTime
+  );
+  severeImpact.hospitalBedsByRequestedTime = Math.trunc(
+    (totalHospitalBeds * 0.35) - severeImpact.severeCasesByRequestedTime
+  );
+
+
+  estimate.casesForICUByRequestedTime = Math.trunc(
+    estimate.infectionsByRequestedTime * 0.05
+  );
+  severeImpact.casesForICUByRequestedTime = Math.trunc(
+    severeImpact.infectionsByRequestedTime * 0.05
+  );
+
+
+  estimate.casesForVentilatorsByRequestedTime = Math.trunc(
+    estimate.infectionsByRequestedTime * 0.02
+  );
+  severeImpact.casesForVentilatorsByRequestedTime = Math.trunc(
+    severeImpact.infectionsByRequestedTime * 0.02
+  );
+
   return {
     data,
-    estimate: {
-      currentlyInfected: estimatedInfections(false).currentlyInfected,
-      infectionsByRequestedTime: estimatedInfections(false).infectionsByRequestedTime
-    },
-    severeImpact: {
-      currentlyInfected: estimatedInfections(true).currentlyInfected,
-      infectionsByRequestedTime: estimatedInfections(true).infectionsByRequestedTime
-    }
+    estimate,
+    severeImpact
   };
 };
 
+
+// console.log('covid19ImpactEstimator -> covid19ImpactEstimator', covid19ImpactEstimator(input));
 
 export default covid19ImpactEstimator;
