@@ -1,18 +1,18 @@
 import estimateInfections from './estimateInfections';
 
-const input = {
-  region: {
-    name: 'Africa',
-    avgAge: 19.7,
-    avgDailyIncomeInUSD: 4,
-    avgDailyIncomePopulation: 0.73
-  },
-  periodType: 'days',
-  timeToElapse: 38,
-  reportedCases: 2747,
-  population: 92931687,
-  totalHospitalBeds: 678874
-};
+// const input = {
+//   region: {
+//     name: 'Africa',
+//     avgAge: 19.7,
+//     avgDailyIncomeInUSD: 4,
+//     avgDailyIncomePopulation: 0.73
+//   },
+//   periodType: 'days',
+//   timeToElapse: 38,
+//   reportedCases: 2747,
+//   population: 92931687,
+//   totalHospitalBeds: 678874
+// };
 
 
 const covid19ImpactEstimator = (data) => {
@@ -20,7 +20,7 @@ const covid19ImpactEstimator = (data) => {
     reportedCases, periodType, timeToElapse, /* population, */ totalHospitalBeds
   } = data;
 
-  // console.log('covid19ImpactEstimator -> data', data);
+  console.log('covid19ImpactEstimator -> data', data);
 
   const estimatedInfections = estimateInfections(reportedCases, periodType, timeToElapse);
 
@@ -49,6 +49,23 @@ const covid19ImpactEstimator = (data) => {
   );
 
 
+  estimate.casesForICUByRequestedTime = Math.trunc(
+    estimate.infectionsByRequestedTime * 0.05
+  );
+  severeImpact.casesForICUByRequestedTime = Math.trunc(
+    severeImpact.infectionsByRequestedTime * 0.05
+  );
+
+
+  estimate.casesForVentilatorsByRequestedTime = Math.trunc(
+    estimate.infectionsByRequestedTime * 0.02
+  );
+  console.log('covid19ImpactEstimator -> estimate', estimate);
+  severeImpact.casesForVentilatorsByRequestedTime = Math.trunc(
+    severeImpact.infectionsByRequestedTime * 0.02
+  );
+  console.log('covid19ImpactEstimator -> severeImpact', severeImpact);
+
   return {
     data,
     estimate,
@@ -57,6 +74,6 @@ const covid19ImpactEstimator = (data) => {
 };
 
 
-console.log('covid19ImpactEstimator -> covid19ImpactEstimator', covid19ImpactEstimator(input));
+// console.log('covid19ImpactEstimator -> covid19ImpactEstimator', covid19ImpactEstimator(input));
 
 export default covid19ImpactEstimator;

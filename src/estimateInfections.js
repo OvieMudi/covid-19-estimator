@@ -2,11 +2,11 @@ const normalizeTimeToElapse = (period, periodType) => {
   let normalizedTime = 1;
 
   if (['day', 'days'].includes(periodType)) {
-    normalizedTime = period;
+    normalizedTime = Number(period);
   } else if (['week', 'weeks'].includes(periodType)) {
-    normalizedTime = period * 7;
+    normalizedTime = Number(period) * 7;
   } else if (['month', 'months'].includes(periodType)) {
-    normalizedTime = period * 30;
+    normalizedTime = Number(period) * 30;
   }
 
   return normalizedTime;
