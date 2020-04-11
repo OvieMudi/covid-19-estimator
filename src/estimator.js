@@ -1,4 +1,4 @@
-import estimateInfections from './estimateInfections';
+import estimateInfections, { normalizeTimeToElapse } from './estimateInfections';
 
 // const input = {
 //   region: {
@@ -67,14 +67,14 @@ const covid19ImpactEstimator = (data) => {
     (impact.infectionsByRequestedTime
        * region.avgDailyIncomePopulation
        * region.avgDailyIncomeInUSD
-    ) / timeToElapse
+    ) / normalizeTimeToElapse(timeToElapse, periodType)
   );
 
   severeImpact.dollarsInFlight = Math.trunc(
     (severeImpact.infectionsByRequestedTime
        * region.avgDailyIncomePopulation
        * region.avgDailyIncomeInUSD
-    ) / timeToElapse
+    ) / normalizeTimeToElapse(timeToElapse, periodType)
   );
 
   return {

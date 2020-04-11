@@ -1,4 +1,4 @@
-const normalizeTimeToElapse = (period, periodType) => {
+export const normalizeTimeToElapse = (period, periodType) => {
   let normalizedTime = 1;
 
   if (['day', 'days'].includes(periodType)) {
