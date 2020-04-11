@@ -16,15 +16,14 @@ import estimateInfections from './estimateInfections';
 
 
 const covid19ImpactEstimator = (data) => {
+  console.log('covid19ImpactEstimator -> data', data);
   const {
     reportedCases, periodType, timeToElapse, /* population, */ totalHospitalBeds
   } = data;
 
-  console.log('covid19ImpactEstimator -> data', data);
-
   const estimatedInfections = estimateInfections(reportedCases, periodType, timeToElapse);
 
-  const estimate = {
+  const impact = {
     currentlyInfected: estimatedInfections(false).currentlyInfected,
     infectionsByRequestedTime: estimatedInfections(false).infectionsByRequestedTime
   };
@@ -34,41 +33,39 @@ const covid19ImpactEstimator = (data) => {
     infectionsByRequestedTime: estimatedInfections(true).infectionsByRequestedTime
   };
 
-  estimate.severeCasesByRequestedTime = Math.trunc(
-    estimate.infectionsByRequestedTime * 0.15
+  impact.severeCasesByRequestedTime = Math.trunc(
+    impact.infectionsByRequestedTime * 0.15
   );
   severeImpact.severeCasesByRequestedTime = Math.trunc(
     severeImpact.infectionsByRequestedTime * 0.15
   );
 
-  estimate.hospitalBedsByRequestedTime = Math.trunc(
-    (totalHospitalBeds * 0.35) - estimate.severeCasesByRequestedTime
+  impact.hospitalBedsByRequestedTime = Math.trunc(
+    (totalHospitalBeds * 0.35) - impact.severeCasesByRequestedTime
   );
   severeImpact.hospitalBedsByRequestedTime = Math.trunc(
     (totalHospitalBeds * 0.35) - severeImpact.severeCasesByRequestedTime
   );
 
 
-  estimate.casesForICUByRequestedTime = Math.trunc(
-    estimate.infectionsByRequestedTime * 0.05
+  impact.casesForICUByRequestedTime = Math.trunc(
+    impact.infectionsByRequestedTime * 0.05
   );
   severeImpact.casesForICUByRequestedTime = Math.trunc(
     severeImpact.infectionsByRequestedTime * 0.05
   );
 
 
-  estimate.casesForVentilatorsByRequestedTime = Math.trunc(
-    estimate.infectionsByRequestedTime * 0.02
+  impact.casesForVentilatorsByRequestedTime = Math.trunc(
+    impact.infectionsByRequestedTime * 0.02
   );
-  console.log('covid19ImpactEstimator -> estimate', estimate);
   severeImpact.casesForVentilatorsByRequestedTime = Math.trunc(
     severeImpact.infectionsByRequestedTime * 0.02
   );
-  console.log('covid19ImpactEstimator -> severeImpact', severeImpact);
 
   return {
     data,
-    estimate,
+    impact,
     severeImpact
   };
 };
