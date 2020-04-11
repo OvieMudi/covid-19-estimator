@@ -18,7 +18,7 @@ import estimateInfections from './estimateInfections';
 const covid19ImpactEstimator = (data) => {
   console.log('covid19ImpactEstimator -> data', data);
   const {
-    reportedCases, periodType, timeToElapse, /* population, */ totalHospitalBeds
+    region, reportedCases, periodType, timeToElapse, totalHospitalBeds
   } = data;
 
   const estimatedInfections = estimateInfections(reportedCases, periodType, timeToElapse);
@@ -61,6 +61,20 @@ const covid19ImpactEstimator = (data) => {
   );
   severeImpact.casesForVentilatorsByRequestedTime = Math.trunc(
     severeImpact.infectionsByRequestedTime * 0.02
+  );
+
+  impact.dollarsInFlight = Math.trunc(
+    (impact.infectionsByRequestedTime
+       * region.avgDailyIncomePopulation
+       * region.avgDailyIncomeInUSD
+    ) / timeToElapse
+  );
+
+  severeImpact.dollarsInFlight = Math.trunc(
+    (severeImpact.infectionsByRequestedTime
+       * region.avgDailyIncomePopulation
+       * region.avgDailyIncomeInUSD
+    ) / timeToElapse
   );
 
   return {
