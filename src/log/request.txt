@@ -1,0 +1,3 @@
+GET		/api/v1/on-covid-19/logs		200		05ms
+GET		/api/v1/on-covid-19/logs		200		01ms
+GET		/api/v1/on-covid-19/logs		200		06ms
