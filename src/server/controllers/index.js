@@ -1,18 +1,21 @@
 
 import { readFileSync } from 'fs';
 import xml2js from 'xml2js';
-import root from '../../root';
-import estimator from '../../src/estimator';
+import appRoot from 'app-root-path';
+import estimator from '../../estimator';
 
 const toXML = new xml2js.Builder();
 
 
 const estimatorJsonController = (req, res) => {
+  console.log('estimatorJsonController -> req.body', req.body);
+
   const estimate = estimator(req.body);
   res.status(200).json(estimate);
 };
 
 const estimatorXMLController = (req, res) => {
+  console.log('estimatorXMLController -> req.body', req.body);
   const estimate = estimator(req.body);
 
   const XMLString = toXML.buildObject(estimate);
@@ -24,9 +27,10 @@ const estimatorXMLController = (req, res) => {
 
 
 const logController = (req, res) => {
+  console.log('logController -> req.body', req.body);
   let parsedLog = '';
 
-  const logs = readFileSync(`${root.appRootDir}/server/logs/request.log`, 'utf8').split('\n');
+  const logs = readFileSync(`${appRoot}/src/log/request.txt`, 'utf8').split('\n');
 
   let logLine = {};
 
