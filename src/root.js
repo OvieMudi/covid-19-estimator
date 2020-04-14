@@ -1,5 +1,5 @@
 const root = {
-  appRootDir: __dirname
+  appRootDir: `${__dirname}/..`
 };
 
 export default root;

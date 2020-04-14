@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 
-const accessLogStream = fs.createWriteStream(path.join(`${appRoot}/server/logs`, 'request.log'), { flags: 'a' });
+const accessLogStream = fs.createWriteStream(path.join(`${appRoot}/src/logs`, 'request.log'), { flags: 'a' });
 const format = '{"method":":method", "url":":url", "status"::status, "responseTime":":response-time"}';
 
 app.use(morgan(format, { stream: accessLogStream }));

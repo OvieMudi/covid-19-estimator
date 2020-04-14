@@ -6,8 +6,11 @@
   "private": false,
   "scripts": {
     "lint": "eslint ./src/",
-    "start": "babel-node server/app.js",
-    "dev": "nodemon --exec babel-node server/app.js"
+    "start": "node build/server/app.js",
+    "build": "rm -rf build && babel --out-dir ./build ./src",
+    "dev": "nodemon --exec babel-node src/server/app.js",
+    "heroku-postbuild": "yarn build"
+
   },
   "dependencies": {
     "app-root-path": "^3.0.0",

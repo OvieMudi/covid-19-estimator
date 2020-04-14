@@ -2,7 +2,7 @@
 import { readFileSync } from 'fs';
 import xml2js from 'xml2js';
 import root from '../../root';
-import estimator from '../../src/estimator';
+import estimator from '../../estimator';
 
 const toXML = new xml2js.Builder();
 
